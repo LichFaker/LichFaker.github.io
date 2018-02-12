@@ -29,3 +29,4 @@ after_success:
 # 这里的 REPO_TOKEN 即之前在 travis 项目的环境变量里添加的
 - git push --quiet --force https://$REPO_TOKEN@github.com/LichFaker/LichFaker.github.io.git
   master
+- find public -type f -exec curl --ftp-create-dirs -T {} -u $FTP_USER:$FTP_PASSWORD ftp://bxu2359600246.my3w.com/htdocs/{} \;
