@@ -1,0 +1,58 @@
+rss: /atom.xml
+# Extensions
+## Plugins: http://hexo.io/plugins/
+#RSS订阅
+plugins:
+  - hexo-generator-feed
+#Feed Atom
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+
+scheme: Mist
+
+# ---------------------------------------------------------------
+# Menu Settings
+# ---------------------------------------------------------------
+
+# When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash from link value (/archives -> archives).
+# Usage: `Key: /link/ || icon`
+# Key is the name of menu item. If translate for this menu will find in languages - this translate will be loaded; if not - Key name will be used. Key is case-senstive.
+# Value before `||` delimeter is the target link.
+# Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
+menu:
+  home: / || home
+  # about: /about/ || user
+  tags: /tags/ || tags
+  categories: /categories/ || th
+  archives: /archives/ || archive
+  # schedule: /schedule/ || calendar
+  #sitemap: /sitemap.xml || sitemap
+  #commonweal: /404/ || heartbeat
+
+social:
+  GitHub: http://www.github.com/LichFaker || github
+  Medium: https://medium.com/@lichfaker || medium
+  E-Mail: mailto:lichfaker@gmail.com || envelope
+
+avatar: /images/avatar.jpeg
+
+# Declare license on posts
+post_copyright:
+  enable: true
+  license: CC BY-NC-SA 3.0
+  license_url: https://creativecommons.org/licenses/by-nc-sa/3.0/
+
+mobile_layout_economy: true
+
+highlight_theme: normal
+
+# Disqus
+disqus:
+  enable: true
+  shortname: LichFaker
+  count: true
+
+# CNZZ count
+cnzz_siteid: 1271495173
