@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "hexo": {
-    "version": "3.5.0"
+    "version": "3.6.0"
   },
   "dependencies": {
+    "ftp": "^0.3.10",
+    "glob": "^7.1.2",
     "hexo": "^3.2.0",
     "hexo-deployer-ftpsync": "^0.1.1",
     "hexo-generator-archive": "^0.1.4",
@@ -17,8 +19,6 @@
     "hexo-renderer-marked": "^0.3.0",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
-    "minimist": "^1.2.0",
-    "vinyl-fs": "^3.0.2",
-    "vinyl-ftp": "^0.6.1"
+    "minimist": "^1.2.0"
   }
 }
