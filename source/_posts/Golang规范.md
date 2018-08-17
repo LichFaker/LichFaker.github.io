@@ -52,7 +52,7 @@ type Car interface {
     Drive()
 }
 ```
-
+<!-- more -->
 ### 1.6 结构体
 结构体名应该是名词或名词短语，如`Account`,`Book`，避免使用`Manager`这样的。
 如果该数据结构需要序列化，如`json`， 则首字母大写， 包括里面的字段。
