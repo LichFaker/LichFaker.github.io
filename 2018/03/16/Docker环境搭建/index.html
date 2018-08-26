@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker,Vagrant," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LichFaker的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Vagrant方式一般我们使用docker是在linux环境中，所以这里使用虚拟机的方式来安装搭建docker环境，同时在实验练习的时候，其安装的一些镜像、插件不会影响到本机环境，只需在结束的时候删除整个虚拟机即可。 而Vagrant是一个虚拟机管理软件，它可以帮我们快速安装配置和管理虚拟机。 安装使用 首先需要依赖安装VirtualBox或者VMWare  官网下载符合版本的Vagrant，链接">
+<meta name="keywords" content="Docker,Vagrant">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker环境搭建">
+<meta property="og:url" content="http://blog.lichfaker.com/2018/03/16/Docker环境搭建/index.html">
+<meta property="og:site_name" content="LichFaker的博客">
+<meta property="og:description" content="Vagrant方式一般我们使用docker是在linux环境中，所以这里使用虚拟机的方式来安装搭建docker环境，同时在实验练习的时候，其安装的一些镜像、插件不会影响到本机环境，只需在结束的时候删除整个虚拟机即可。 而Vagrant是一个虚拟机管理软件，它可以帮我们快速安装配置和管理虚拟机。 安装使用 首先需要依赖安装VirtualBox或者VMWare  官网下载符合版本的Vagrant，链接">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-26T05:43:44.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker环境搭建">
+<meta name="twitter:description" content="Vagrant方式一般我们使用docker是在linux环境中，所以这里使用虚拟机的方式来安装搭建docker环境，同时在实验练习的时候，其安装的一些镜像、插件不会影响到本机环境，只需在结束的时候删除整个虚拟机即可。 而Vagrant是一个虚拟机管理软件，它可以帮我们快速安装配置和管理虚拟机。 安装使用 首先需要依赖安装VirtualBox或者VMWare  官网下载符合版本的Vagrant，链接">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.lichfaker.com/2018/03/16/Docker环境搭建/"/>
+
+
+
+
+
+  <title>Docker环境搭建 | LichFaker的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LichFaker的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.lichfaker.com/2018/03/16/Docker环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LichFaker">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LichFaker的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-16T11:39:27+00:00">
+                2018-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/16/Docker环境搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/16/Docker环境搭建/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Vagrant方式"><a href="#Vagrant方式" class="headerlink" title="Vagrant方式"></a>Vagrant方式</h2><p>一般我们使用<code>docker</code>是在<code>linux</code>环境中，所以这里使用虚拟机的方式来安装搭建<code>docker</code>环境，同时在实验练习的时候，其安装的一些镜像、插件不会影响到本机环境，只需在结束的时候删除整个虚拟机即可。</p>
+<p>而<code>Vagrant</code>是一个虚拟机管理软件，它可以帮我们快速安装配置和管理虚拟机。</p>
+<h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><ol>
+<li><p>首先需要依赖安装<code>VirtualBox</code>或者<code>VMWare</code></p>
+</li>
+<li><p>官网下载符合版本的Vagrant，<a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="noopener">链接</a></p>
+</li>
+<li><p>在官网上搜索需要的<code>box</code>系统镜像文件，<a href="https://app.vagrantup.com/boxes/search" target="_blank" rel="noopener">链接</a></p>
+</li>
+<li><p>手动下载镜像文件，在搜索到的镜像页面中，选择版本，在该链接后拼接<code>/providers/virtualbox.box</code>就是下载地址，以centos7为例，下载地址就是：<br><a href="https://app.vagrantup.com/centos/boxes/7/versions/1802.01/providers/virtualbox.box" target="_blank" rel="noopener">https://app.vagrantup.com/centos/boxes/7/versions/1802.01/providers/virtualbox.box</a></p>
+</li>
+<li><p>新建一个空文件夹, 在终端命令行执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vagrant box add centos /path/to/centos.box</span><br><span class="line">vagrant init centos</span><br><span class="line"># vagrant up 成功后会在virtualbox上创建一个centos的虚拟机</span><br><span class="line">vagrant up</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vagrant ssh // ssh</span><br><span class="line">vagrant halt // 关机</span><br><span class="line">vagrant status // 查看状态</span><br><span class="line">vagrant destory // 删除虚拟机</span><br></pre></td></tr></table></figure>
+<h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><p>首先<code>vagrant ssh</code>进入虚拟机。</p>
+<p>根据官方文档， 依次执行以下命令：<br><a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">sudo yum update -y</span><br><span class="line"></span><br><span class="line"># Uninstall older versions of Docker, along with associated dependencies.</span><br><span class="line">sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-selinux \</span><br><span class="line">                  docker-engine-selinux \</span><br><span class="line">                  docker-engine</span><br><span class="line"></span><br><span class="line"># Install required packages.</span><br><span class="line">sudo yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br><span class="line"></span><br><span class="line"># Set up the stable repository. </span><br><span class="line"># http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo may faster in China</span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line"># Install the latest version of Docker CE</span><br><span class="line">sudo yum install -y docker-ce</span><br><span class="line"></span><br><span class="line"># Start docker</span><br><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure></p>
+<p>除了以上方式，还可以用Vagrant的Shell Script功能：</p>
+<p>在<code>vagrant init</code>后会生成一个<code>Vagrantfile</code>文件，可以配置一些虚拟机相关的参数，其中有一个Shell：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Enable provisioning with a shell script. Additional provisioners such as</span><br><span class="line"># Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the</span><br><span class="line"># documentation for more information about their specific syntax and use.</span><br><span class="line"># config.vm.provision &quot;shell&quot;, inline: &lt;&lt;-SHELL</span><br><span class="line">#   apt-get update</span><br><span class="line">#   apt-get install -y apache2</span><br><span class="line"># SHELL</span><br></pre></td></tr></table></figure>
+<p>简单来说就是将上面的一些安装命令写在<code>Vagrantfile</code>的<code>SHELL</code>中， 这样每次安装<code>up</code>的时候就会自动安装<code>docker</code></p>
+<h2 id="docker-machine"><a href="#docker-machine" class="headerlink" title="docker machine"></a>docker machine</h2><p>docker machine 是一个能自动在虚拟机上安装docker engine的工具。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Docker for Mac、Docker for Windows 自带 docker-machine 二进制包，安装之后即可使用。</p>
+<p>也可以单独下载安装，<a href="https://docs.docker.com/machine/install-machine/#install-machine-directly" target="_blank" rel="noopener">文档</a></p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
+<li><p>创建一台 Docker 主机，命名为 test</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create test</span><br></pre></td></tr></table></figure>
+<p> 在创建时也可以指定<code>driver</code>，如<code>virtualbox</code>，<code>xhyve</code>等。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d virtualbox test</span><br></pre></td></tr></table></figure>
+<p> 同时可以跟一些配置参数， 如: <code>--engine-registry-mirror https://registry.docker-cn.com</code> 配置 Docker 的仓库镜像；更多参数请使用 <code>docker-machine create --driver virtualbox --help</code> 命令查看。</p>
+</li>
+<li><p>查看主机</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ls</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置当前docker engine为目标主机<br>执行<code>docker-machine env test</code>，输出如下：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export DOCKER_TLS_VERIFY=&quot;1&quot;</span><br><span class="line">export DOCKER_HOST=&quot;tcp://192.168.99.100:2376&quot;</span><br><span class="line">export DOCKER_CERT_PATH=&quot;/Users/lichfaker/.docker/machine/machines/test&quot;</span><br><span class="line">export DOCKER_MACHINE_NAME=&quot;test&quot;</span><br><span class="line"># Run this command to configure your shell:</span><br><span class="line"># eval $(docker-machine env test)</span><br></pre></td></tr></table></figure>
+<p> 执行<code>eval $(docker-machine env test)</code>后，当前的<code>docker engine</code>就是<code>test</code>主机的，可以通过<code>docker version</code>查看验证。</p>
+<p> 如果想要取消设置，<code>docker-machine env --unset</code>后根据提示操作即可。</p>
+</li>
+<li><p>登录到主机</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh test</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>管理远程主机</p>
+<ul>
+<li>AWS： <a href="https://docs.docker.com/machine/drivers/aws/" target="_blank" rel="noopener">https://docs.docker.com/machine/drivers/aws/</a></li>
+<li>Aliyun: <a href="https://github.com/AliyunContainerService/docker-machine-driver-aliyunecs" target="_blank" rel="noopener">https://github.com/AliyunContainerService/docker-machine-driver-aliyunecs</a></li>
+</ul>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.docker.com" target="_blank" rel="noopener">docker文档</a><br><a href="https://www.vagrantup.com/docs/" target="_blank" rel="noopener">Vagrant文档</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    LichFaker
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.lichfaker.com/2018/03/16/Docker环境搭建/" title="Docker环境搭建">http://blog.lichfaker.com/2018/03/16/Docker环境搭建/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
+          
+            <a href="/tags/Vagrant/" rel="tag"># Vagrant</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/16/zsh中用户名主机隐藏/" rel="next" title="zsh中用户名主机隐藏">
+                <i class="fa fa-chevron-left"></i> zsh中用户名主机隐藏
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/20/Docker镜像和容器/" rel="prev" title="Docker镜像和容器">
+                Docker镜像和容器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpeg"
+                alt="LichFaker" />
+            
+              <p class="site-author-name" itemprop="name">LichFaker</p>
+              <p class="site-description motion-element" itemprop="description">我只有两天<br>我从来没有把握<br>一天用来出生，一天用来死亡</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.github.com/LichFaker" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://medium.com/@lichfaker" target="_blank" title="Medium">
+                      
+                        <i class="fa fa-fw fa-medium"></i>Medium</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lichfaker@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Vagrant方式"><span class="nav-number">1.</span> <span class="nav-text">Vagrant方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装使用"><span class="nav-number">1.1.</span> <span class="nav-text">安装使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">1.2.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装docker"><span class="nav-number">1.3.</span> <span class="nav-text">安装docker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-machine"><span class="nav-number">2.</span> <span class="nav-text">docker machine</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">2.2.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LichFaker</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1271495173&web_id=1271495173" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://LichFaker.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://blog.lichfaker.com/2018/03/16/Docker环境搭建/';
+          this.page.identifier = '2018/03/16/Docker环境搭建/';
+          this.page.title = 'Docker环境搭建';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://LichFaker.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

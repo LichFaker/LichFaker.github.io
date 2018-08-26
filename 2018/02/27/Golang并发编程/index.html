@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Golang,并发," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LichFaker的博客" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Goroutine在Go语言中，语言本身就已经实现和支持了并发， 我们只需要通过go关键字来开启goroutine即可。 gouroutine其实就是一种协程，类似其他语言中的coroutine， 是在编译器或虚拟机层面上的多任务。它可以运行在一个或多个线程上，但不同于线程，它是非抢占式的，所以协程很轻量。 1234567891011func main() &amp;#123;    for i := 0">
+<meta name="keywords" content="Golang,并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang并发编程">
+<meta property="og:url" content="http://blog.lichfaker.com/2018/02/27/Golang并发编程/index.html">
+<meta property="og:site_name" content="LichFaker的博客">
+<meta property="og:description" content="Goroutine在Go语言中，语言本身就已经实现和支持了并发， 我们只需要通过go关键字来开启goroutine即可。 gouroutine其实就是一种协程，类似其他语言中的coroutine， 是在编译器或虚拟机层面上的多任务。它可以运行在一个或多个线程上，但不同于线程，它是非抢占式的，所以协程很轻量。 1234567891011func main() &amp;#123;    for i := 0">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-26T05:43:44.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang并发编程">
+<meta name="twitter:description" content="Goroutine在Go语言中，语言本身就已经实现和支持了并发， 我们只需要通过go关键字来开启goroutine即可。 gouroutine其实就是一种协程，类似其他语言中的coroutine， 是在编译器或虚拟机层面上的多任务。它可以运行在一个或多个线程上，但不同于线程，它是非抢占式的，所以协程很轻量。 1234567891011func main() &amp;#123;    for i := 0">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.lichfaker.com/2018/02/27/Golang并发编程/"/>
+
+
+
+
+
+  <title>Golang并发编程 | LichFaker的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LichFaker的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.lichfaker.com/2018/02/27/Golang并发编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LichFaker">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LichFaker的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Golang并发编程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-27T13:57:03+00:00">
+                2018-02-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/27/Golang并发编程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/27/Golang并发编程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Goroutine"><a href="#Goroutine" class="headerlink" title="Goroutine"></a>Goroutine</h2><p>在Go语言中，语言本身就已经实现和支持了并发， 我们只需要通过<code>go</code>关键字来开启<code>goroutine</code>即可。</p>
+<p>gouroutine其实就是一种协程，类似其他语言中的coroutine， 是在编译器或虚拟机层面上的多任务。它可以运行在一个或多个线程上，但不同于线程，它是<strong>非抢占式的</strong>，所以协程很轻量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    for i := 0; i &lt; 1000; i++ &#123;</span><br><span class="line">    go func(ii int) &#123;</span><br><span class="line">        for &#123;</span><br><span class="line">            fmt.Printf(&quot;Hello %d\n&quot;, ii)</span><br><span class="line">        &#125;</span><br><span class="line">        &#125;(i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    time.Sleep(time.Millisecond)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码就开启了1000个协程，在1ms内不断的打印字符串，这里需要注意两个点：</p>
+<ol>
+<li><p>time.Sleep<br> 在main函数退出前，Sleep了1ms。这是因为当main函数退出时，之前开的协程也会随着退出，如果不Sleep，则无法看到打印信息。</p>
+</li>
+<li><p>匿名函数将变量i作为参数赋值传入。<br> 如果不传参，变量i也能被使用，但是是以引用的方式。而i在main函数中在不断自增，导致在goroutine打印信息中，无法知道是第几个协程打印的。</p>
+</li>
+</ol>
+<p>从打印信息上看，跟开线程没什么区别，无非就是数量上不同。但是在操作系统层面，线程是抢占式，而我们之前说协程是非抢占式的，这怎么会一样呢？</p>
+<a id="more"></a>
+<p>出现上述问题的原因在于，在调用<code>Printf</code>的时候，进行了切换， goroutine主动让出了控制权。我们修改代码如下，演示下非抢占：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a := [10]int&#123;&#125;</span><br><span class="line">for i := 0; i &lt; 10; i++ &#123;</span><br><span class="line">    go func(ii int) &#123;</span><br><span class="line">        for &#123;</span><br><span class="line">            a[ii]++</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">time.Sleep(time.Millisecond)</span><br><span class="line">fmt.Println(a)</span><br></pre></td></tr></table></figure>
+<p>运行上述代码，出现了死循环。因为在开辟的第一个goroutine中，一直循环执行<code>a[ii]++</code>，一直没有让出控制权；而<code>main</code>本质上也是个goroutine，所以后面的代码都没有执行完，也没有退出。</p>
+<p>遇到这种情况，我们可以在goroutine中主动让出控制权，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a[ii]++</span><br><span class="line">runtime.Gosched()</span><br></pre></td></tr></table></figure>
+<p>goroutine 可能会切换的点 （不能保证）:</p>
+<ul>
+<li>I/O,select</li>
+<li>channel</li>
+<li>等待锁</li>
+<li>runtime.Gosched()</li>
+</ul>
+<h2 id="CSP并发模型"><a href="#CSP并发模型" class="headerlink" title="CSP并发模型"></a>CSP并发模型</h2><p>Go实现了两种并发形式：</p>
+<ol>
+<li>共享内存 + 锁同步</li>
+<li>CSP. 通过goroutine和channel来实现的.</li>
+</ol>
+<p>CSP并发模型是在1970年左右提出的概念，属于比较新的概念，不同于传统的多线程通过共享内存来通信，CSP讲究的是“以通信的方式来共享内存”。</p>
+<blockquote>
+<p>Do not communicate by sharing memory; instead, share memory by communicating<br>不要以共享内存的方式来通信，相反，要通过通信来共享内存。</p>
+</blockquote>
+<h2 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h2><p>channel 是用来在不同goroutine之间进行通信的，无论传值还是取值， 它都是阻塞的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c := make(chan int)</span><br><span class="line">c &lt;- 1</span><br></pre></td></tr></table></figure>
+<p>上面代码直接运行会造成死锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all goroutines are asleep - deadlock!</span><br></pre></td></tr></table></figure>
+<p>所以一般在使用channel前先开一个goroutine去接收channel:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">func createWorker() chan int &#123;</span><br><span class="line">    c := make(chan int)</span><br><span class="line">    go func() &#123;</span><br><span class="line">        for n := range c &#123;</span><br><span class="line">            fmt.Println(&quot;received:&quot;, n)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    return c</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var channels [10]chan int</span><br><span class="line"></span><br><span class="line">    for i, _ := range channels &#123;</span><br><span class="line">        channels[i] = createWorker()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for i, c := range channels &#123;</span><br><span class="line">        c &lt;- i</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    time.Sleep(time.Millisecond)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述代码中，我们定义了一个<code>createWorker</code>，用来创建一个接收者，同时返回了一个channel。同时我们可以对返回的channel做限制，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func createWorker() chan&lt;- int // 只能发送数据</span><br><span class="line">func createWorker() &lt;-chan int // 只能接收数据</span><br></pre></td></tr></table></figure>
+<p>一般可以通过<code>n := &lt;- c</code>来接收数据，在上述例子中使用了range，因为channel是可以close的。</p>
+<p><code>close(c)</code>关闭channel， 但是关闭后在worker中依然能接收到channel（只要goroutine没有退出）。而接收到的数据是定义的channel的零值，在上述例子中，则收到0.</p>
+<ul>
+<li><p>通过<code>n,ok := &lt;- c</code>的ok来判断channel是否关闭；也可以通过range来接收；</p>
+</li>
+<li><p>如果往已经关闭的channel写数据，会panic：<code>send on closed channel</code>. <strong>不要从接收端关闭channel，也不要关闭有多个并发发送者的channel</strong></p>
+</li>
+</ul>
+<h3 id="等待任务结束"><a href="#等待任务结束" class="headerlink" title="等待任务结束"></a>等待任务结束</h3><p>在之前的例子中，我们都是通过Sleep方法来粗略的控制任务的执行，这在实际生产中肯定不能这么干。之前也说了channel是用来通信的，那么我们可以通过channel来告诉使用者任务已经执行完了。 代码优化如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">type worker struct &#123;</span><br><span class="line">    in   chan int</span><br><span class="line">    done chan bool</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func createWorker() worker &#123;</span><br><span class="line">    w := worker&#123;</span><br><span class="line">        in:   make(chan int),</span><br><span class="line">        done: make(chan bool),</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    go func(w worker) &#123;</span><br><span class="line">        for n := range w.in &#123;</span><br><span class="line">            fmt.Println(&quot;received:&quot;, n)</span><br><span class="line">            w.done &lt;- true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;(w)</span><br><span class="line"></span><br><span class="line">    return w</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func chanNormal() &#123;</span><br><span class="line">    var workers [10]worker</span><br><span class="line"></span><br><span class="line">    for i, _ := range workers &#123;</span><br><span class="line">        workers[i] = createWorker()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for i, w := range workers &#123;</span><br><span class="line">        w.in &lt;- i</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for _, w := range workers &#123;</span><br><span class="line">        &lt;-w.done</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    chanNormal()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了我们自己定义channel，go也为我们提供了<code>sync.WaitGroup</code>，来管理一组任务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var wg sync.WaitGroup</span><br><span class="line">wg.Add(1)</span><br><span class="line">wg.Done()</span><br><span class="line">wg.Wait()</span><br></pre></td></tr></table></figure>
+<h3 id="Tip"><a href="#Tip" class="headerlink" title="Tip"></a>Tip</h3><p>将struct中的done抽象成一个方法，在<code>create</code>的时候实现，这样在<code>worker</code>中就不用管具体代码了，只要调用done方法即可。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    LichFaker
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.lichfaker.com/2018/02/27/Golang并发编程/" title="Golang并发编程">http://blog.lichfaker.com/2018/02/27/Golang并发编程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Golang/" rel="tag"># Golang</a>
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/16/Golang面向对象和接口编程/" rel="next" title="Golang面向对象和接口编程">
+                <i class="fa fa-chevron-left"></i> Golang面向对象和接口编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/08/cache2go源码分析/" rel="prev" title="cache2go源码分析">
+                cache2go源码分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpeg"
+                alt="LichFaker" />
+            
+              <p class="site-author-name" itemprop="name">LichFaker</p>
+              <p class="site-description motion-element" itemprop="description">我只有两天<br>我从来没有把握<br>一天用来出生，一天用来死亡</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="http://www.github.com/LichFaker" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://medium.com/@lichfaker" target="_blank" title="Medium">
+                      
+                        <i class="fa fa-fw fa-medium"></i>Medium</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lichfaker@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Goroutine"><span class="nav-number">1.</span> <span class="nav-text">Goroutine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSP并发模型"><span class="nav-number">2.</span> <span class="nav-text">CSP并发模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#channel"><span class="nav-number">3.</span> <span class="nav-text">channel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#等待任务结束"><span class="nav-number">3.1.</span> <span class="nav-text">等待任务结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tip"><span class="nav-number">3.2.</span> <span class="nav-text">Tip</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LichFaker</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1271495173&web_id=1271495173" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://LichFaker.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://blog.lichfaker.com/2018/02/27/Golang并发编程/';
+          this.page.identifier = '2018/02/27/Golang并发编程/';
+          this.page.title = 'Golang并发编程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://LichFaker.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
